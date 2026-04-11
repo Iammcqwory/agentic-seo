@@ -1,5 +1,5 @@
 import { join } from 'node:path';
-import { readFileSafe, finding, checkerResult } from '../utils.js';
+import { readFileSafe, resolveFile, finding, checkerResult } from '../utils.js';
 
 const ID = 'agent-permissions';
 const NAME = 'Agent Permissions Configuration';
@@ -19,25 +19,21 @@ export async function check(context) {
   const findings_list = [];
   let score = 0;
 
-  const paths = [
-    join(context.dir, 'agent-permissions.json'),
-    join(context.dir, '.well-known/agent-permissions.json'),
-    join(context.dir, 'agent.json'),
-    join(context.dir, '.well-known/ai-plugin.json'),
+  const filenames = [
+    'agent-permissions.json',
+    '.well-known/agent-permissions.json',
+    'agent.json',
+    '.well-known/ai-plugin.json',
   ];
-
-  if (context.projectDir && context.projectDir !== context.dir) {
-    paths.push(join(context.projectDir, 'agent-permissions.json'));
-  }
 
   let content = null;
   let foundPath = null;
 
-  for (const p of paths) {
-    const c = await readFileSafe(p);
-    if (c) {
-      content = c;
-      foundPath = p;
+  for (const filename of filenames) {
+    const result = await resolveFile(context, filename);
+    if (result.content) {
+      content = result.content;
+      foundPath = result.source === 'url' ? `${context.url}/${filename}` : filename;
       break;
     }
   }

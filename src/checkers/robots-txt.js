@@ -1,5 +1,5 @@
 import { join } from 'node:path';
-import { readFileSafe, fileExists, parseRobotsTxt, isAgentBlocked, AI_AGENTS, finding, checkerResult } from '../utils.js';
+import { readFileSafe, resolveFile, parseRobotsTxt, isAgentBlocked, AI_AGENTS, finding, checkerResult } from '../utils.js';
 
 const ID = 'robots-txt';
 const NAME = 'Robots.txt AI Access';
@@ -19,8 +19,7 @@ export async function check(context) {
   const findings = [];
   let score = 0;
 
-  const robotsPath = join(context.dir, 'robots.txt');
-  const content = await readFileSafe(robotsPath);
+  const { content } = await resolveFile(context, 'robots.txt');
 
   if (!content) {
     // No robots.txt - not necessarily bad, agents can access everything

@@ -1,5 +1,5 @@
 import { join } from 'node:path';
-import { readFileSafe, finding, checkerResult } from '../utils.js';
+import { readFileSafe, resolveFile, fetchUrl, finding, checkerResult } from '../utils.js';
 import { countTokens } from '../tokenizer.js';
 
 const ID = 'llms-txt';
@@ -22,23 +22,16 @@ export async function check(context) {
   const findings = [];
   let score = 0;
 
-  // Check both root and build output
-  const paths = [
-    join(context.dir, 'llms.txt'),
-    join(context.dir, 'llms-full.txt'),
-  ];
-
-  if (context.projectDir && context.projectDir !== context.dir) {
-    paths.push(join(context.projectDir, 'llms.txt'));
-  }
-
+  // Try multiple locations: build dir, project root, URL
   let content = null;
   let foundPath = null;
-  for (const p of paths) {
-    const c = await readFileSafe(p);
-    if (c) {
-      content = c;
-      foundPath = p;
+
+  const filenames = ['llms.txt', 'llms-full.txt'];
+  for (const filename of filenames) {
+    const result = await resolveFile(context, filename);
+    if (result.content) {
+      content = result.content;
+      foundPath = result.source === 'url' ? `${context.url}/${filename}` : filename;
       break;
     }
   }
