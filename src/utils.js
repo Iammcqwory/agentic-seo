@@ -1,6 +1,7 @@
 import { readFile, access, readdir, stat } from 'node:fs/promises';
 import { join, extname, relative } from 'node:path';
 import { constants } from 'node:fs';
+import { URL } from 'node:url';
 
 /**
  * Check if a file exists at the given path.
@@ -201,6 +202,54 @@ export function isAgentBlocked(rules, agentName) {
 
   if (hasDisallow && !hasAllow) return true;
   return false;
+}
+
+/**
+ * Get the best directory to scan for content files from context.
+ * Returns the first non-null directory, or null if only URL mode.
+ */
+export function getContentDir(context) {
+  return context.dir || context.projectDir || null;
+}
+
+/**
+ * Fetch a text resource from a URL. Returns null on failure.
+ */
+export async function fetchUrl(baseUrl, path = '') {
+  try {
+    const url = path ? new URL(path, baseUrl).href : baseUrl;
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'aeo-audit/1.0' },
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!res.ok) return null;
+    return await res.text();
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Read a file locally or fetch it from a URL, trying both context.dir and context.url.
+ * Returns { content, source } or { content: null }.
+ */
+export async function resolveFile(context, filename) {
+  // Try local filesystem first
+  if (context.dir) {
+    const content = await readFileSafe(join(context.dir, filename));
+    if (content) return { content, source: 'local' };
+  }
+  // Try project root
+  if (context.projectDir && context.projectDir !== context.dir) {
+    const content = await readFileSafe(join(context.projectDir, filename));
+    if (content) return { content, source: 'project' };
+  }
+  // Try URL
+  if (context.url) {
+    const content = await fetchUrl(context.url, `/${filename}`);
+    if (content) return { content, source: 'url' };
+  }
+  return { content: null };
 }
 
 /**
