@@ -206,10 +206,12 @@ export function isAgentBlocked(rules, agentName) {
 
 /**
  * Get the best directory to scan for content files from context.
- * Returns the first non-null directory, or null if only URL mode.
+ * Returns context.dir if set, or null in URL-only mode.
+ * Does NOT fall back to projectDir since that may be the user's CWD
+ * and not the target site.
  */
 export function getContentDir(context) {
-  return context.dir || context.projectDir || null;
+  return context.dir || null;
 }
 
 /**
