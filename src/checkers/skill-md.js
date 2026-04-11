@@ -21,16 +21,24 @@ export async function check(context) {
   const findings_list = [];
   let score = 0;
 
-  const searchDir = context.projectDir || context.dir;
-  const mdFiles = await walkDir(searchDir, ['.md']);
-  const skillFiles = mdFiles.filter((f) => {
-    const name = f.split('/').pop().toLowerCase();
-    return name === 'skill.md' || name === 'skills.md' || name.startsWith('skill-');
-  });
+  // In URL-only mode (no local dir), we can't scan for skill files
+  const searchDir = context.dir ? (context.projectDir || context.dir) : null;
+  let skillFiles = [];
+
+  if (searchDir) {
+    const mdFiles = await walkDir(searchDir, ['.md']);
+    skillFiles = mdFiles.filter((f) => {
+      const name = f.split('/').pop().toLowerCase();
+      return name === 'skill.md' || name === 'skills.md' || name.startsWith('skill-');
+    });
+  }
 
   if (skillFiles.length === 0) {
+    const msg = searchDir
+      ? 'No skill.md files found.'
+      : 'Cannot scan for skill.md files in URL-only mode.';
     findings_list.push(
-      finding('error', 'No skill.md files found.',
+      finding('error', msg,
         'Create skill.md files for your APIs and services. These tell agents what your product can DO, not just how to call it.\nInclude: capabilities list, required inputs, constraints, and links to detailed docs.')
     );
     return checkerResult(ID, NAME, CATEGORY, 0, MAX_SCORE, 'fail', findings_list);

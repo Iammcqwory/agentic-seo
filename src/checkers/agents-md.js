@@ -27,9 +27,17 @@ export async function check(context) {
   const findings_list = [];
   let score = 0;
 
-  const searchDir = context.projectDir || context.dir;
+  const searchDir = context.dir ? (context.projectDir || context.dir) : null;
   let content = null;
   let foundFile = null;
+
+  if (!searchDir) {
+    findings_list.push(
+      finding('error', 'Cannot scan for AGENTS.md in URL-only mode.',
+        'Create an AGENTS.md in your repo root. This is the entry point for AI coding agents.\nInclude: project structure, key file locations, API docs links, dev environment setup, and coding conventions.')
+    );
+    return checkerResult(ID, NAME, CATEGORY, 0, MAX_SCORE, 'fail', findings_list);
+  }
 
   for (const file of AGENT_FILES) {
     const c = await readFileSafe(join(searchDir, file));
