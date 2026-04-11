@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio';
-import { readFileSafe, getHtmlFiles, relativePath, finding, checkerResult } from '../utils.js';
+import { readFileSafe, getHtmlFiles, getContentDir, relativePath, finding, checkerResult } from '../utils.js';
 
 const ID = 'meta-tags';
 const NAME = 'AI-Friendly Meta Tags';
@@ -20,9 +20,15 @@ export async function check(context) {
   const findings_list = [];
   let score = 0;
 
-  const htmlFiles = await getHtmlFiles(context.dir);
+  const scanDir = getContentDir(context);
+  if (!scanDir) {
+    findings_list.push(finding('warning', 'No local directory available to analyze meta tags.'));
+    return checkerResult(ID, NAME, CATEGORY, 0, MAX_SCORE, 'warn', findings_list);
+  }
+
+  const htmlFiles = await getHtmlFiles(scanDir);
   if (htmlFiles.length === 0) {
-    findings_list.push(finding('warning', 'No HTML files found to analyze.'));
+    findings_list.push(finding('warning', 'No HTML files found to analyze meta tags.'));
     return checkerResult(ID, NAME, CATEGORY, 0, MAX_SCORE, 'warn', findings_list);
   }
 

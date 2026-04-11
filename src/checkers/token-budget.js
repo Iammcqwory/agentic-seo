@@ -1,4 +1,4 @@
-import { readFileSafe, getHtmlFiles, getMarkdownFiles, stripHtml, relativePath, finding, checkerResult } from '../utils.js';
+import { readFileSafe, getHtmlFiles, getMarkdownFiles, getContentDir, stripHtml, relativePath, finding, checkerResult } from '../utils.js';
 import { countTokens, classifyTokenCount, TOKEN_THRESHOLDS } from '../tokenizer.js';
 
 const ID = 'token-budget';
@@ -19,8 +19,14 @@ export async function check(context) {
   const findings_list = [];
   let score = 0;
 
-  const htmlFiles = await getHtmlFiles(context.dir);
-  const mdFiles = await getMarkdownFiles(context.dir);
+  const scanDir = getContentDir(context);
+  if (!scanDir) {
+    findings_list.push(finding('warning', 'No local directory available to analyze token counts.'));
+    return checkerResult(ID, NAME, CATEGORY, 0, MAX_SCORE, 'warn', findings_list);
+  }
+
+  const htmlFiles = await getHtmlFiles(scanDir);
+  const mdFiles = await getMarkdownFiles(scanDir);
   const allFiles = [...htmlFiles, ...mdFiles];
 
   if (allFiles.length === 0) {
@@ -46,7 +52,7 @@ export async function check(context) {
     const classification = classifyTokenCount(tokens);
 
     pageStats.push({
-      path: relativePath(context.dir, file),
+      path: relativePath(scanDir, file),
       tokens,
       classification: classification.level,
     });

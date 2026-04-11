@@ -1,6 +1,5 @@
-import { getHtmlFiles, getMarkdownFiles, relativePath, finding, checkerResult } from '../utils.js';
+import { getHtmlFiles, getMarkdownFiles, getContentDir, relativePath, finding, checkerResult, readFileSafe } from '../utils.js';
 import * as cheerio from 'cheerio';
-import { readFileSafe } from '../utils.js';
 
 const ID = 'markdown-availability';
 const NAME = 'Markdown Content Availability';
@@ -19,8 +18,14 @@ export async function check(context) {
   const findings_list = [];
   let score = 0;
 
-  const htmlFiles = await getHtmlFiles(context.dir);
-  const mdFiles = await getMarkdownFiles(context.dir);
+  const scanDir = getContentDir(context);
+  if (!scanDir) {
+    findings_list.push(finding('warning', 'No local directory available to analyze Markdown availability.'));
+    return checkerResult(ID, NAME, CATEGORY, 0, MAX_SCORE, 'warn', findings_list);
+  }
+
+  const htmlFiles = await getHtmlFiles(scanDir);
+  const mdFiles = await getMarkdownFiles(scanDir);
 
   // Check for Markdown source availability
   if (mdFiles.length > 0) {
