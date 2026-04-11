@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio';
-import { readFileSafe, getHtmlFiles, getContentDir, relativePath, finding, checkerResult } from '../utils.js';
+import { readFileSafe, getHtmlFiles, getMarkdownFiles, getContentDir, relativePath, finding, checkerResult } from '../utils.js';
 
 const ID = 'content-structure';
 const NAME = 'Content Structure Quality';
@@ -27,14 +27,21 @@ export async function check(context) {
   }
 
   const htmlFiles = await getHtmlFiles(scanDir);
+  const mdFiles = htmlFiles.length === 0 ? await getMarkdownFiles(scanDir) : [];
+  const useMarkdown = htmlFiles.length === 0 && mdFiles.length > 0;
+  const sourceFiles = useMarkdown ? mdFiles : htmlFiles;
 
-  if (htmlFiles.length === 0) {
-    findings_list.push(finding('warning', 'No HTML files found to analyze content structure.'));
+  if (sourceFiles.length === 0) {
+    findings_list.push(finding('warning', 'No HTML or Markdown files found to analyze content structure.'));
     return checkerResult(ID, NAME, CATEGORY, 0, MAX_SCORE, 'warn', findings_list);
   }
 
+  if (useMarkdown) {
+    findings_list.push(finding('info', `Analyzing ${mdFiles.length} Markdown files (no HTML build output found).`));
+  }
+
   // Sample up to 20 pages
-  const sampled = htmlFiles.slice(0, 20);
+  const sampled = sourceFiles.slice(0, 20);
   let totalHeadingIssues = 0;
   let pagesWithCode = 0;
   let pagesWithTables = 0;
@@ -45,41 +52,54 @@ export async function check(context) {
     const content = await readFileSafe(file);
     if (!content) continue;
 
-    const $ = cheerio.load(content);
-
-    // Check heading hierarchy
-    const headings = [];
-    $('h1, h2, h3, h4, h5, h6').each((_, el) => {
-      headings.push(parseInt(el.tagName[1]));
-    });
-
-    let hasSkip = false;
-    for (let i = 1; i < headings.length; i++) {
-      if (headings[i] - headings[i - 1] > 1) {
-        hasSkip = true;
-        break;
+    if (useMarkdown) {
+      // Markdown analysis
+      const headings = [...content.matchAll(/^(#{1,6})\s/gm)].map((m) => m[1].length);
+      let hasSkip = false;
+      for (let i = 1; i < headings.length; i++) {
+        if (headings[i] - headings[i - 1] > 1) { hasSkip = true; break; }
       }
+      if (hasSkip) totalHeadingIssues++;
+
+      if (/```[\s\S]*?```/m.test(content)) pagesWithCode++;
+      if (/\|.*\|.*\|/m.test(content)) pagesWithTables++;
+
+      // Markdown is inherently semantic (no nav/footer noise)
+      pagesWithSemanticHtml++;
+
+      // Check first non-frontmatter, non-heading paragraph
+      const bodyContent = content.replace(/^---[\s\S]*?---\n*/m, '');
+      const firstPara = bodyContent.split('\n\n').find(
+        (p) => p.trim() && !p.trim().startsWith('#') && !p.trim().startsWith('---')
+      );
+      if (firstPara && firstPara.trim().length > 50) pagesWithGoodLeadIn++;
+    } else {
+      // HTML analysis
+      const $ = cheerio.load(content);
+
+      const headings = [];
+      $('h1, h2, h3, h4, h5, h6').each((_, el) => {
+        headings.push(parseInt(el.tagName[1]));
+      });
+
+      let hasSkip = false;
+      for (let i = 1; i < headings.length; i++) {
+        if (headings[i] - headings[i - 1] > 1) { hasSkip = true; break; }
+      }
+      if (hasSkip) totalHeadingIssues++;
+
+      if ($('pre code, pre, .highlight').length > 0) pagesWithCode++;
+      if ($('table').length > 0) pagesWithTables++;
+
+      const hasMain = $('main').length > 0;
+      const hasArticle = $('article').length > 0;
+      const hasSection = $('section').length > 0;
+      if (hasMain || hasArticle || hasSection) pagesWithSemanticHtml++;
+
+      const mainContent = $('main').length > 0 ? $('main') : $('body');
+      const firstPara = mainContent.find('p').first().text().trim();
+      if (firstPara && firstPara.length > 50) pagesWithGoodLeadIn++;
     }
-    if (hasSkip) totalHeadingIssues++;
-
-    // Check for code examples
-    const codeBlocks = $('pre code, pre, .highlight').length;
-    if (codeBlocks > 0) pagesWithCode++;
-
-    // Check for tables
-    const tables = $('table').length;
-    if (tables > 0) pagesWithTables++;
-
-    // Check for semantic HTML
-    const hasMain = $('main').length > 0;
-    const hasArticle = $('article').length > 0;
-    const hasSection = $('section').length > 0;
-    if (hasMain || hasArticle || hasSection) pagesWithSemanticHtml++;
-
-    // Check if first content paragraph is descriptive (not just navigation)
-    const mainContent = $('main').length > 0 ? $('main') : $('body');
-    const firstPara = mainContent.find('p').first().text().trim();
-    if (firstPara && firstPara.length > 50) pagesWithGoodLeadIn++;
   }
 
   const totalPages = sampled.length;
@@ -135,11 +155,14 @@ export async function check(context) {
     );
   }
 
-  // Semantic HTML
+  // Semantic structure (HTML tags or Markdown inherent structure)
   const semanticRate = pagesWithSemanticHtml / totalPages;
   if (semanticRate >= 0.7) {
     score += 3;
-    findings_list.push(finding('info', 'Good use of semantic HTML elements (main, article, section).'));
+    const label = useMarkdown
+      ? 'Markdown source provides clean semantic structure (no navigation noise).'
+      : 'Good use of semantic HTML elements (main, article, section).';
+    findings_list.push(finding('info', label));
   } else if (semanticRate >= 0.3) {
     score += 1;
     findings_list.push(
