@@ -1,4 +1,5 @@
 import { join } from 'node:path';
+import { readdir } from 'node:fs/promises';
 import { fileExists } from './utils.js';
 
 /**
@@ -95,28 +96,70 @@ export async function detectFramework(projectDir) {
 }
 
 /**
+ * Check if a directory has actual content (HTML or MD files).
+ */
+async function hasContent(dir) {
+  try {
+    const entries = await readdir(dir);
+    if (entries.length === 0) return false;
+    // Check for at least one content file
+    for (const entry of entries) {
+      const ext = entry.toLowerCase();
+      if (ext.endsWith('.html') || ext.endsWith('.md') || ext.endsWith('.mdx')) return true;
+    }
+    // Check one level deep
+    for (const entry of entries.slice(0, 10)) {
+      try {
+        const sub = await readdir(join(dir, entry));
+        for (const s of sub) {
+          const ext = s.toLowerCase();
+          if (ext.endsWith('.html') || ext.endsWith('.md') || ext.endsWith('.mdx')) return true;
+        }
+      } catch {
+        // Not a directory
+      }
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Find the build output directory for a project.
  * Tries framework detection first, then falls back to common directory names.
+ * For unbuilt sites, falls back to docs/ or the project root if they have content.
  */
 export async function findOutputDir(projectDir) {
   // Try framework detection
   const framework = await detectFramework(projectDir);
-  if (framework?.outputDir) {
+  if (framework?.outputDir && await hasContent(framework.outputDir)) {
     return { framework: framework.name, dir: framework.outputDir };
   }
 
-  // Fallback: look for common output directories
+  // Fallback: look for common output directories with actual content
   for (const dir of FALLBACK_OUTPUT_DIRS) {
     const fullPath = join(projectDir, dir);
-    if (await fileExists(fullPath)) {
-      // Check if it contains HTML files (basic validation)
-      return { framework: null, dir: fullPath };
+    if (await fileExists(fullPath) && await hasContent(fullPath)) {
+      return { framework: framework?.name || null, dir: fullPath };
     }
   }
 
   // Check if the directory itself contains HTML files (already a build output)
   if (await fileExists(join(projectDir, 'index.html'))) {
-    return { framework: null, dir: projectDir };
+    return { framework: framework?.name || null, dir: projectDir };
+  }
+
+  // For documentation-focused projects, check docs/ directory for Markdown content
+  // This handles unbuilt MkDocs, Docusaurus source, etc.
+  const docsDir = join(projectDir, 'docs');
+  if (await fileExists(docsDir) && await hasContent(docsDir)) {
+    return { framework: framework?.name || null, dir: docsDir, source: 'docs' };
+  }
+
+  // Last resort: project root itself may have content
+  if (await hasContent(projectDir)) {
+    return { framework: framework?.name || null, dir: projectDir };
   }
 
   return {
