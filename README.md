@@ -1,8 +1,8 @@
 # aeo-audit
 
-Audit your documentation and website for **Agentic Engine Optimization (AEO)** — making your content discoverable, parseable, and useful to AI coding agents.
+Audit your documentation and website for **Agentic Engine Optimization (AEO)**: ensure your content is discoverable, parseable, and useful to AI coding agents.
 
-AI coding agents like Claude Code, Cursor, Cline, and Aider consume documentation fundamentally differently from humans. They issue single HTTP requests, strip HTML, count tokens, and either use your content or silently discard it. `aeo-audit` checks whether your documentation is ready for this new reality.
+AI coding agents like Claude Code, Cursor, Cline, and Aider consume documentation fundamentally differently from humans. They issue single HTTP requests, strip HTML, count tokens, and either use your content as context or silently discard it. `aeo-audit` checks whether your documentation is ready for this new reality.
 
 ## Quick Start
 
@@ -162,11 +162,11 @@ import { checkers } from 'aeo-audit';
 
 `aeo-audit` does not require an API key. All checks are structural and heuristic:
 
-1. **Framework Detection** — Auto-detects your build tool and locates the output directory
-2. **File Analysis** — Checks for `robots.txt`, `llms.txt`, `AGENTS.md`, `skill.md`, and `agent-permissions.json`
-3. **Content Analysis** — Parses HTML with Cheerio and Markdown with Remark to evaluate structure
-4. **Token Counting** — Uses `gpt-tokenizer` to measure real token counts per page
-5. **Agent Simulation** — Evaluates what AI agents would actually see when fetching your pages
+1. **Framework Detection**: Auto-detects your build tool and locates the output directory
+2. **File Analysis**: Checks for `robots.txt`, `llms.txt`, `AGENTS.md`, `skill.md`, and `agent-permissions.json`
+3. **Content Analysis**: Parses HTML with Cheerio and Markdown with Remark to evaluate structure
+4. **Token Counting**: Uses `gpt-tokenizer` to measure real token counts per page
+5. **Agent Simulation**: Evaluates what AI agents would actually see when fetching your pages
 
 ## CLI Options
 
@@ -185,14 +185,14 @@ Options:
 
 ## Where to Start
 
-If you're new to AEO, here's the priority order:
+If you're new to AEO, here's the recommended priority order:
 
-1. **Audit robots.txt** — Prevents silent agent lockout (10 min)
-2. **Add llms.txt** — Immediate discoverability gains (few hours)
-3. **Measure token counts** — High leverage insight (weekend project)
-4. **Write skill.md** — For your top APIs (start with most-used)
-5. **Add "Copy for AI" buttons** — Low effort, high signal
-6. **Set up AI traffic monitoring** — Gives data to justify the rest
+1. **Audit robots.txt**: Prevents silent agent lockout (10 min)
+2. **Add llms.txt**: Immediate discoverability gains (a few hours)
+3. **Measure token counts**: High-leverage insight into page sizes (weekend project)
+4. **Write skill.md**: Start with your most-used APIs
+5. **Add "Copy for AI" buttons**: Low effort, high signal for human+agent workflows
+6. **Set up AI traffic monitoring**: Gives you data to justify further investment
 
 ## License
 

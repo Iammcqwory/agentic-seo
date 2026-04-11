@@ -102,11 +102,11 @@ export const checkers = [
 
 ## Checker Design Principles
 
-- **No API keys required** — All checks must be heuristic/structural
-- **Actionable fixes** — Every error/warning should include a `fix` suggestion
-- **Consistent scoring** — Use the `checkerResult()` helper
-- **Graceful degradation** — Handle missing files, empty directories, parse errors
-- **Reasonable defaults** — Work without configuration
+- **No API keys required.** All checks must be heuristic or structural.
+- **Actionable fixes.** Every error and warning should include a `fix` suggestion.
+- **Consistent scoring.** Use the `checkerResult()` helper for uniform output.
+- **Graceful degradation.** Handle missing files, empty directories, and parse errors.
+- **Reasonable defaults.** Checkers should work without any user configuration.
 
 ## Testing
 

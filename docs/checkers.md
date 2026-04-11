@@ -39,7 +39,7 @@ Allow: /
 
 ### llms-txt (10 points)
 
-Checks for a well-formed `llms.txt` file — a structured index for AI agents.
+Checks for a well-formed `llms.txt` file, which serves as a structured index for AI agents.
 
 **What it checks:**
 - File exists at root (`llms.txt` or `llms-full.txt`) (+3)
@@ -156,7 +156,7 @@ Checks for agent access control configuration.
 - Defines allowed interactions (+1)
 - Includes rate limit information (+1)
 
-This is an emerging standard — a soft warning rather than hard failure.
+This is an emerging standard, so it produces a soft warning rather than a hard failure.
 
 ---
 
