@@ -1,0 +1,53 @@
+{
+  "name": "aeo-audit",
+  "version": "1.0.0",
+  "description": "Audit your documentation and website for AI agent readiness (Agentic Engine Optimization)",
+  "type": "module",
+  "bin": {
+    "aeo-audit": "./bin/aeo.js"
+  },
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "scripts": {
+    "test": "node --test test/**/*.test.js test/checkers/**/*.test.js",
+    "test:ci": "node --test --test-reporter=spec test/**/*.test.js test/checkers/**/*.test.js",
+    "lint": "eslint src/ test/"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "templates/"
+  ],
+  "keywords": [
+    "aeo",
+    "agentic-engine-optimization",
+    "ai-agents",
+    "documentation",
+    "audit",
+    "llms-txt",
+    "agents-md",
+    "developer-experience",
+    "seo",
+    "cli"
+  ],
+  "author": "AEO Audit Contributors",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "cheerio": "^1.0.0",
+    "glob": "^11.0.0",
+    "gray-matter": "^4.0.3",
+    "gpt-tokenizer": "^2.8.0",
+    "ora": "^8.1.0",
+    "serve-handler": "^6.1.6",
+    "unified": "^11.0.5",
+    "remark-parse": "^11.0.0",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {}
+}
