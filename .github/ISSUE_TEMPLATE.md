@@ -20,7 +20,7 @@
 
 - Node.js version: 
 - OS: 
-- aeo-audit version: 
+- agenta version: 
 
 ## Command Run
 

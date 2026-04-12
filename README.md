@@ -1,28 +1,28 @@
-# aeo-audit
+# agenta
 
 Audit your documentation and website for **Agentic Engine Optimization (AEO)**: ensure your content is discoverable, parseable, and useful to AI coding agents.
 
-AI coding agents like Claude Code, Cursor, Cline, and Aider consume documentation fundamentally differently from humans. They issue single HTTP requests, strip HTML, count tokens, and either use your content as context or silently discard it. `aeo-audit` checks whether your documentation is ready for this new reality.
+AI coding agents like Claude Code, Cursor, Cline, and Aider consume documentation fundamentally differently from humans. They issue single HTTP requests, strip HTML, count tokens, and either use your content as context or silently discard it. `agenta` checks whether your documentation is ready for this new reality.
 
 ## Quick Start
 
 ```bash
 # Audit current directory (auto-detects framework)
-npx aeo-audit
+npx agenta
 
 # Audit a specific directory
-npx aeo-audit ./my-docs-site
+npx agenta ./my-docs-site
 
 # Audit a live URL
-npx aeo-audit --url https://docs.example.com
+npx agenta --url https://docs.example.com
 
 # Scaffold missing AEO files
-npx aeo-audit init
+npx agenta init
 ```
 
 ## What It Checks
 
-`aeo-audit` runs 10 checks across 5 categories, scoring your site out of 100:
+`agenta` runs 10 checks across 5 categories, scoring your site out of 100:
 
 ### Discovery (25 points)
 | Check | Points | What it looks for |
@@ -68,10 +68,10 @@ npx aeo-audit init
 
 ```bash
 # Global install
-npm install -g aeo-audit
+npm install -g agenta
 
 # Or use npx (no install needed)
-npx aeo-audit
+npx agenta
 ```
 
 ## Usage
@@ -80,10 +80,10 @@ npx aeo-audit
 
 ```bash
 # Auto-detects framework (Next.js, Docusaurus, 11ty, Astro, Hugo, etc.)
-aeo-audit ./my-project
+agenta ./my-project
 
 # Explicitly specify build output directory
-aeo-audit --output-dir ./my-project/build
+agenta --output-dir ./my-project/build
 ```
 
 Supported frameworks: Next.js, Docusaurus, Eleventy, Astro, Hugo, Jekyll, Gatsby, VitePress, MkDocs, Sphinx, Vite.
@@ -92,36 +92,36 @@ Supported frameworks: Next.js, Docusaurus, Eleventy, Astro, Hugo, Jekyll, Gatsby
 
 ```bash
 # Spin up a server and run HTTP-based checks
-aeo-audit --serve ./build
+agenta --serve ./build
 ```
 
 ### Audit a Live URL
 
 ```bash
-aeo-audit --url https://docs.example.com
+agenta --url https://docs.example.com
 ```
 
 ### CI Mode
 
 ```bash
 # Exit with code 1 if score below threshold
-aeo-audit --json --threshold 60
+agenta --json --threshold 60
 
 # Just the score
-aeo-audit score --json
+agenta score --json
 ```
 
 ### Scaffold AEO Files
 
 ```bash
 # Create missing llms.txt, AGENTS.md, skill.md, agent-permissions.json
-aeo-audit init
+agenta init
 ```
 
 ### Run Specific Checks
 
 ```bash
-aeo-audit --checks robots-txt,llms-txt,token-budget
+agenta --checks robots-txt,llms-txt,token-budget
 ```
 
 ## Configuration
@@ -143,7 +143,7 @@ Create `.aeorc.json` in your project root, or add an `"aeo"` key to `package.jso
 ## Programmatic API
 
 ```js
-import { audit, auditWithServer } from 'aeo-audit';
+import { audit, auditWithServer } from 'agenta';
 
 // Audit a directory
 const report = await audit('./my-site');
@@ -155,12 +155,12 @@ console.log(report.findings.errors); // [{ severity: 'error', message: '...' }]
 const report2 = await auditWithServer('./build');
 
 // Access individual checkers
-import { checkers } from 'aeo-audit';
+import { checkers } from 'agenta';
 ```
 
 ## How It Works
 
-`aeo-audit` does not require an API key. All checks are structural and heuristic:
+`agenta` does not require an API key. All checks are structural and heuristic:
 
 1. **Framework Detection**: Auto-detects your build tool and locates the output directory
 2. **File Analysis**: Checks for `robots.txt`, `llms.txt`, `AGENTS.md`, `skill.md`, and `agent-permissions.json`
@@ -193,6 +193,10 @@ If you're new to AEO, here's the recommended priority order:
 4. **Write skill.md**: Start with your most-used APIs
 5. **Add "Copy for AI" buttons**: Low effort, high signal for human+agent workflows
 6. **Set up AI traffic monitoring**: Gives you data to justify further investment
+
+## Disclaimer
+
+This is not an official Google project and is not endorsed by Google or Google Search. The concepts, checks, and recommendations in this tool are a best-effort community offering based on publicly available research and emerging practices around AI agent documentation consumption. Scores and recommendations should be taken as directional guidance, not as guarantees of any particular outcome.
 
 ## License
 

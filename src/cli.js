@@ -12,7 +12,7 @@ import { scaffold } from './scaffolder.js';
 
 export async function run(argv) {
   const cli = yargs(argv)
-    .scriptName('aeo-audit')
+    .scriptName('agenta')
     .usage('$0 [dir]', 'Audit a site for Agentic Engine Optimization', (yargs) => {
       yargs.positional('dir', {
         describe: 'Directory to audit (auto-detects framework and build output)',
@@ -211,7 +211,7 @@ async function handleInit(cli) {
       console.log(`  ${chalk.green('+')} ${file}`);
     }
     console.log('');
-    console.log(chalk.dim('  Edit these files to match your project. Then run aeo-audit to check your score.\n'));
+    console.log(chalk.dim('  Edit these files to match your project. Then run agenta to check your score.\n'));
   }
 }
 

@@ -1,10 +1,10 @@
 {
-  "name": "aeo-audit",
+  "name": "agenta",
   "version": "1.0.0",
   "description": "Audit your documentation and website for AI agent readiness (Agentic Engine Optimization)",
   "type": "module",
   "bin": {
-    "aeo-audit": "./bin/aeo.js"
+    "agenta": "./bin/aeo.js"
   },
   "main": "./src/index.js",
   "exports": {
@@ -13,7 +13,8 @@
   "scripts": {
     "test": "node --test test/**/*.test.js test/checkers/**/*.test.js",
     "test:ci": "node --test --test-reporter=spec test/**/*.test.js test/checkers/**/*.test.js",
-    "lint": "eslint src/ test/"
+    "lint": "eslint src/ test/",
+    "prepublishOnly": "npm test"
   },
   "files": [
     "bin/",
@@ -21,6 +22,7 @@
     "templates/"
   ],
   "keywords": [
+    "agenta",
     "aeo",
     "agentic-engine-optimization",
     "ai-agents",
@@ -32,8 +34,16 @@
     "seo",
     "cli"
   ],
-  "author": "AEO Audit Contributors",
+  "author": "Addy Osmani",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AEO-Audit/agenta.git"
+  },
+  "homepage": "https://github.com/AEO-Audit/agenta#readme",
+  "bugs": {
+    "url": "https://github.com/AEO-Audit/agenta/issues"
+  },
   "engines": {
     "node": ">=18.0.0"
   },

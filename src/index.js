@@ -1,8 +1,8 @@
 /**
- * aeo-audit - Programmatic API
+ * agenta - Programmatic API
  *
  * Usage:
- *   import { audit, auditUrl } from 'aeo-audit';
+ *   import { audit, auditUrl } from 'agenta';
  *
  *   const report = await audit('./my-site');
  *   console.log(report.grade); // 'B'

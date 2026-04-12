@@ -221,7 +221,7 @@ export async function fetchUrl(baseUrl, path = '') {
   try {
     const url = path ? new URL(path, baseUrl).href : baseUrl;
     const res = await fetch(url, {
-      headers: { 'User-Agent': 'aeo-audit/1.0' },
+      headers: { 'User-Agent': 'agenta/1.0' },
       signal: AbortSignal.timeout(10000),
     });
     if (!res.ok) return null;

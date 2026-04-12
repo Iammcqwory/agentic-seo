@@ -1,13 +1,13 @@
-# Contributing to aeo-audit
+# Contributing to agenta
 
-Thanks for your interest in contributing to `aeo-audit`! This guide covers how to get started.
+Thanks for your interest in contributing to `agenta`! This guide covers how to get started.
 
 ## Development Setup
 
 ```bash
 # Clone the repository
-git clone https://github.com/AEO-Audit/aeo-audit.git
-cd aeo-audit
+git clone https://github.com/addyosmani/agenta.git
+cd agenta
 
 # Install dependencies
 npm install
@@ -23,7 +23,7 @@ node bin/aeo.js test/fixtures/bad-site
 ## Project Structure
 
 ```
-aeo-audit/
+agenta/
 ├── bin/aeo.js              CLI entry point
 ├── src/
 │   ├── index.js            Programmatic API
