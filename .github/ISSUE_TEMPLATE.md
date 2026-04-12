@@ -20,7 +20,7 @@
 
 - Node.js version: 
 - OS: 
-- agenta version: 
+- agentic-seo version: 
 
 ## Command Run
 

@@ -1,8 +1,8 @@
 /**
- * agenta - Programmatic API
+ * agentic-seo - Programmatic API
  *
  * Usage:
- *   import { audit, auditUrl } from 'agenta';
+ *   import { audit, auditUrl } from 'agentic-seo';
  *
  *   const report = await audit('./my-site');
  *   console.log(report.grade); // 'B'

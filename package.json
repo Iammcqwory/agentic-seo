@@ -1,10 +1,10 @@
 {
-  "name": "agenta",
+  "name": "agentic-seo",
   "version": "1.0.0",
   "description": "Audit your documentation and website for AI agent readiness (Agentic Engine Optimization)",
   "type": "module",
   "bin": {
-    "agenta": "./bin/aeo.js"
+    "agentic-seo": "./bin/aeo.js"
   },
   "main": "./src/index.js",
   "exports": {
@@ -22,7 +22,7 @@
     "templates/"
   ],
   "keywords": [
-    "agenta",
+    "agentic-seo",
     "aeo",
     "agentic-engine-optimization",
     "ai-agents",
@@ -38,11 +38,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AEO-Audit/agenta.git"
+    "url": "git+https://github.com/AEO-Audit/agentic-seo.git"
   },
-  "homepage": "https://github.com/AEO-Audit/agenta#readme",
+  "homepage": "https://github.com/AEO-Audit/agentic-seo#readme",
   "bugs": {
-    "url": "https://github.com/AEO-Audit/agenta/issues"
+    "url": "https://github.com/AEO-Audit/agentic-seo/issues"
   },
   "engines": {
     "node": ">=18.0.0"

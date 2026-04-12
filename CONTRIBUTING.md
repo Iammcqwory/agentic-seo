@@ -1,13 +1,13 @@
-# Contributing to agenta
+# Contributing to agentic-seo
 
-Thanks for your interest in contributing to `agenta`! This guide covers how to get started.
+Thanks for your interest in contributing to `agentic-seo`! This guide covers how to get started.
 
 ## Development Setup
 
 ```bash
 # Clone the repository
-git clone https://github.com/addyosmani/agenta.git
-cd agenta
+git clone https://github.com/addyosmani/agentic-seo.git
+cd agentic-seo
 
 # Install dependencies
 npm install
@@ -23,7 +23,7 @@ node bin/aeo.js test/fixtures/bad-site
 ## Project Structure
 
 ```
-agenta/
+agentic-seo/
 ├── bin/aeo.js              CLI entry point
 ├── src/
 │   ├── index.js            Programmatic API

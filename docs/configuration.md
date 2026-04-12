@@ -1,6 +1,6 @@
 # Configuration
 
-`agenta` works with zero configuration out of the box. For customization, create a config file.
+`agentic-seo` works with zero configuration out of the box. For customization, create a config file.
 
 ## Config File Locations
 
@@ -60,7 +60,7 @@ Minimum score percentage. When set, the CLI exits with code 1 if the score is be
 
 ## Framework Auto-Detection
 
-`agenta` detects your framework by looking for config files:
+`agentic-seo` detects your framework by looking for config files:
 
 | Framework | Config File | Default Output |
 |---|---|---|
@@ -84,14 +84,14 @@ If no framework is detected, the tool checks common output directory names (`_si
 
 ```yaml
 - name: AEO Audit
-  run: npx agenta --json --threshold 60
+  run: npx agentic-seo --json --threshold 60
 ```
 
 ### With JSON output
 
 ```bash
 # Parse the JSON output
-SCORE=$(npx agenta score --json | jq '.percentage')
+SCORE=$(npx agentic-seo score --json | jq '.percentage')
 echo "AEO Score: $SCORE%"
 ```
 
@@ -101,7 +101,7 @@ echo "AEO Score: $SCORE%"
 {
   "scripts": {
     "build": "next build && next export",
-    "postbuild": "agenta ./out --threshold 50"
+    "postbuild": "agentic-seo ./out --threshold 50"
   }
 }
 ```

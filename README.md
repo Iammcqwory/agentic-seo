@@ -1,28 +1,28 @@
-# agenta
+# agentic-seo
 
 Audit your documentation and website for **Agentic Engine Optimization (AEO)**: ensure your content is discoverable, parseable, and useful to AI coding agents.
 
-AI coding agents like Claude Code, Cursor, Cline, and Aider consume documentation fundamentally differently from humans. They issue single HTTP requests, strip HTML, count tokens, and either use your content as context or silently discard it. `agenta` checks whether your documentation is ready for this new reality.
+AI coding agents like Claude Code, Cursor, Cline, and Aider consume documentation fundamentally differently from humans. They issue single HTTP requests, strip HTML, count tokens, and either use your content as context or silently discard it. `agentic-seo` checks whether your documentation is ready for this new reality.
 
 ## Quick Start
 
 ```bash
 # Audit current directory (auto-detects framework)
-npx agenta
+npx agentic-seo
 
 # Audit a specific directory
-npx agenta ./my-docs-site
+npx agentic-seo ./my-docs-site
 
 # Audit a live URL
-npx agenta --url https://docs.example.com
+npx agentic-seo --url https://docs.example.com
 
 # Scaffold missing AEO files
-npx agenta init
+npx agentic-seo init
 ```
 
 ## What It Checks
 
-`agenta` runs 10 checks across 5 categories, scoring your site out of 100:
+`agentic-seo` runs 10 checks across 5 categories, scoring your site out of 100:
 
 ### Discovery (25 points)
 | Check | Points | What it looks for |
@@ -68,10 +68,10 @@ npx agenta init
 
 ```bash
 # Global install
-npm install -g agenta
+npm install -g agentic-seo
 
 # Or use npx (no install needed)
-npx agenta
+npx agentic-seo
 ```
 
 ## Usage
@@ -80,10 +80,10 @@ npx agenta
 
 ```bash
 # Auto-detects framework (Next.js, Docusaurus, 11ty, Astro, Hugo, etc.)
-agenta ./my-project
+agentic-seo ./my-project
 
 # Explicitly specify build output directory
-agenta --output-dir ./my-project/build
+agentic-seo --output-dir ./my-project/build
 ```
 
 Supported frameworks: Next.js, Docusaurus, Eleventy, Astro, Hugo, Jekyll, Gatsby, VitePress, MkDocs, Sphinx, Vite.
@@ -92,36 +92,36 @@ Supported frameworks: Next.js, Docusaurus, Eleventy, Astro, Hugo, Jekyll, Gatsby
 
 ```bash
 # Spin up a server and run HTTP-based checks
-agenta --serve ./build
+agentic-seo --serve ./build
 ```
 
 ### Audit a Live URL
 
 ```bash
-agenta --url https://docs.example.com
+agentic-seo --url https://docs.example.com
 ```
 
 ### CI Mode
 
 ```bash
 # Exit with code 1 if score below threshold
-agenta --json --threshold 60
+agentic-seo --json --threshold 60
 
 # Just the score
-agenta score --json
+agentic-seo score --json
 ```
 
 ### Scaffold AEO Files
 
 ```bash
 # Create missing llms.txt, AGENTS.md, skill.md, agent-permissions.json
-agenta init
+agentic-seo init
 ```
 
 ### Run Specific Checks
 
 ```bash
-agenta --checks robots-txt,llms-txt,token-budget
+agentic-seo --checks robots-txt,llms-txt,token-budget
 ```
 
 ## Configuration
@@ -143,7 +143,7 @@ Create `.aeorc.json` in your project root, or add an `"aeo"` key to `package.jso
 ## Programmatic API
 
 ```js
-import { audit, auditWithServer } from 'agenta';
+import { audit, auditWithServer } from 'agentic-seo';
 
 // Audit a directory
 const report = await audit('./my-site');
@@ -155,12 +155,12 @@ console.log(report.findings.errors); // [{ severity: 'error', message: '...' }]
 const report2 = await auditWithServer('./build');
 
 // Access individual checkers
-import { checkers } from 'agenta';
+import { checkers } from 'agentic-seo';
 ```
 
 ## How It Works
 
-`agenta` does not require an API key. All checks are structural and heuristic:
+`agentic-seo` does not require an API key. All checks are structural and heuristic:
 
 1. **Framework Detection**: Auto-detects your build tool and locates the output directory
 2. **File Analysis**: Checks for `robots.txt`, `llms.txt`, `AGENTS.md`, `skill.md`, and `agent-permissions.json`
