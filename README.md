@@ -1,5 +1,11 @@
 # agentic-seo
 
+[![npm version](https://img.shields.io/npm/v/agentic-seo.svg)](https://www.npmjs.com/package/agentic-seo)
+[![npm downloads](https://img.shields.io/npm/dm/agentic-seo.svg)](https://www.npmjs.com/package/agentic-seo)
+[![license](https://img.shields.io/npm/l/agentic-seo.svg)](https://github.com/addyosmani/agentic-seo/blob/main/LICENSE)
+[![node](https://img.shields.io/node/v/agentic-seo.svg)](https://nodejs.org)
+[![GitHub stars](https://img.shields.io/github/stars/addyosmani/agentic-seo.svg?style=social)](https://github.com/addyosmani/agentic-seo)
+
 Audit your documentation and website for **Agentic Engine Optimization (AEO)**: ensure your content is discoverable, parseable, and useful to AI coding agents.
 
 AI coding agents like Claude Code, Cursor, Cline, and Aider consume documentation fundamentally differently from humans. They issue single HTTP requests, strip HTML, count tokens, and either use your content as context or silently discard it. `agentic-seo` checks whether your documentation is ready for this new reality.
