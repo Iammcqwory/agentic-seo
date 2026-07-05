@@ -28,7 +28,7 @@ export async function check(context) {
   if (searchDir) {
     const mdFiles = await walkDir(searchDir, ['.md']);
     skillFiles = mdFiles.filter((f) => {
-      const name = f.split('/').pop().toLowerCase();
+      const name = f.split(/[\\/]/).pop().toLowerCase();
       return name === 'skill.md' || name === 'skills.md' || name.startsWith('skill-');
     });
   }
